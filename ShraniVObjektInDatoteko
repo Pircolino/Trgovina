@@ -1,0 +1,86 @@
+package sample;
+
+import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
+import javafx.scene.layout.*;
+import javafx.scene.control.*;
+import javafx.geometry.Insets;
+import java.io.*;
+
+
+public class Main extends Application {
+
+    Stage window;
+    TextField username = new TextField();
+    TextField geslo = new TextField();
+
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+        window = primaryStage;
+        Button register = new Button("Register");
+        dodajZacetnoSceno(register);
+        Oseba[] osebe = new Oseba[1];
+
+        //ob kliku register se
+        register.setOnAction(e -> {
+            String ime = username.getText();
+            String pass = geslo.getText();
+            osebe[0] = new Oseba(ime,pass);
+
+            try{
+                FileWriter fw = new FileWriter("Osebe.txt",true);
+                BufferedWriter bw = new BufferedWriter(fw);
+                bw.write(osebe[0].uporabniskoIme + ";" + osebe[0].geslo);
+                bw.newLine();
+                bw.close();
+            }catch(IOException ioe2){
+                System.out.println("Napaka");
+            }
+        });
+
+
+
+
+
+    }
+
+    //doda zacetno prijavno sceno
+    private void dodajZacetnoSceno(Button register){
+        BorderPane osnovniLayout = new BorderPane();
+
+        HBox zgoraj = new HBox();
+        GridPane sredina = new GridPane();
+        zgoraj.setAlignment(Pos.CENTER);
+        sredina.setAlignment(Pos.CENTER);
+        zgoraj.setSpacing(10);
+        zgoraj.setStyle("-fx-background-color: #336699;");
+        zgoraj.setPadding(new Insets(15, 12, 15, 12));
+
+        Label naslov = new Label("Prijavite se v trgovino!");
+        username.setPromptText("Vnesite ");
+        geslo.setPromptText("Vnesite");
+
+        sredina.getChildren().addAll(username,geslo);
+        zgoraj.getChildren().add(naslov);
+
+
+        osnovniLayout.setTop(zgoraj);
+        osnovniLayout.setCenter(sredina);
+
+        Scene osnovnaScena = new Scene(osnovniLayout, 500, 350);
+        window.setScene(osnovnaScena);
+        window.show();
+    }
+
+
+    public static void main(String[] args) {
+        launch(args);
+    } //prva stvar, ki jo program poklice
+
+}
